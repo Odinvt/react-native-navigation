@@ -1,6 +1,6 @@
 {
   "name": "react-native-odinvt-navigation",
-  "version": "1.1.852",
+  "version": "1.1.853",
   "description": "React Native Navigation Fork - truly native navigation for iOS and Android",
   "license": "MIT",
   "nativePackage": true,
