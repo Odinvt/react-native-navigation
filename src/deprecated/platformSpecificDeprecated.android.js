@@ -228,7 +228,7 @@ function convertStyleParams(originalStyleObject) {
   if (ret.topBarReactViewInitialProps) {
     const passPropsKey = _.uniqueId('customNavBarComponent');
     PropRegistry.save(passPropsKey, ret.topBarReactViewInitialProps);
-    ret.topBarReactViewInitialProps = {passPropsKey};  
+    ret.topBarReactViewInitialProps = {passPropsKey};
   }
   return ret;
 }
@@ -252,7 +252,7 @@ function convertDrawerParamsToSideMenuParams(drawerParams) {
       } else {
         result[key].disableOpenGesture = drawer[key].disableOpenGesture;
       }
-      
+
     } else {
       result[key] = null;
     }
@@ -308,6 +308,10 @@ function startTabBasedApp(params) {
   params.sideMenu = convertDrawerParamsToSideMenuParams(params.drawer);
   params.animateShow = convertAnimationType(params.animationType);
 
+  if (params.overlay) {
+    params.overlay = convertOverlayParams(params.overlay);
+  }
+
   newPlatformSpecific.startApp(params);
 }
 
@@ -326,6 +330,21 @@ function addTabIcon(tab) {
 
 function convertAnimationType(animationType) {
   return animationType !== 'none';
+}
+
+function convertOverlayParams(overlayParams) {
+  const params = Object.assign({}, overlayParams);
+
+  const result = {
+    screenId: params.screen,
+    position: params.position,
+    navigationParams: {},
+  };
+
+  addNavigatorParams(result);
+  adaptNavigationParams(result);
+
+  return result;
 }
 
 function navigatorSetButtons(navigator, navigatorEventID, _params) {

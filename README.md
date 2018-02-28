@@ -1,4 +1,34 @@
 
+## FORK OF 'react-native-navigation'
+This package is a fork of wix's 'react-native-navigation' and adds 2 main features missing on the main package on both iOS and Android and 1 Fix on Android :
+
+- Fixes some bugs with the top TitleBar positioning on Android
+- Waits for the react component of a screen to mount before pushing the screen on the native side, effectively removing the white flash effect that might e experienced sometimes when pushing a screen.
+- Adds the ability to provide a custom react bottom Tab Bar component to the startTabBasedApp(params) method like the following :
+
+```Javascript
+
+Navigation.startTabBasedApp({
+  tabs: [
+    ...
+  ],
+  overlay: {
+    screen: 'SCREENID',
+    passProps: {},
+    position: {
+      top: 0,
+      left: 0,
+      width: WIDTH,
+      height: HEIGHT,
+    }
+  }
+});
+```
+
+If you want to compare the changes to the main wix master repository just use [github's compare tool](https://github.com/wix/react-native-navigation/compare/Odinvt:master) and look through my commits.
+
+For the rest just follow the wix documentation except for android's installation take care of using 'react-native-odinvt-navigation' instead of 'react-native-navigation'
+
 <h1 align="center">
   <img src="./logo.png"/><br>
   React Native Navigation
