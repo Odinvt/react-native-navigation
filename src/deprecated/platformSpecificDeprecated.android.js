@@ -16,6 +16,7 @@ function startSingleScreenApp(params) {
     console.error('startSingleScreenApp(params): screen must include a screen property');
     return;
   }
+
   addNavigatorParams(screen);
   addNavigatorButtons(screen, params.drawer);
   addNavigationStyleParams(screen);
@@ -310,6 +311,10 @@ function startTabBasedApp(params) {
 
   if (params.overlay) {
     params.overlay = convertOverlayParams(params.overlay);
+  }
+
+  if(params.tabBarHeight !== 0 && !params.tabBarHeight) {
+    params.tabBarHeight = -1;
   }
 
   newPlatformSpecific.startApp(params);

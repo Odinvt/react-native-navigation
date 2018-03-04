@@ -12,6 +12,7 @@ public class ActivityParamsParser extends Parser {
     private static final String PARAM_TABS = "tabs";
     private static final String PARAM_SIDE_MENU = "sideMenu";
     private static final String PARAM_OVERLAY = "overlay";
+    private static final String PARAM_TAB_BAR_HEIGHT = "tabBarHeight";
     private static final String PARAM_ANIMATE_SHOW = "animateShow";
 
     public static ActivityParams parse(Bundle params) {
@@ -37,6 +38,10 @@ public class ActivityParamsParser extends Parser {
 
         if (hasKey(params, PARAM_OVERLAY)) {
             result.overlayParams =  OverlayParamsParser.parse(params.getBundle(PARAM_OVERLAY));
+        }
+
+        if (hasKey(params, PARAM_TAB_BAR_HEIGHT)) {
+            result.tabBarHeightParams =  params.getInt(PARAM_TAB_BAR_HEIGHT);
         }
 
         result.animateShow = params.getBoolean(PARAM_ANIMATE_SHOW, true);

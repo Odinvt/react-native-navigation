@@ -1,12 +1,16 @@
 package com.reactnativenavigation.layouts;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -64,6 +68,7 @@ public class BottomTabsLayout extends BaseLayout implements AHBottomNavigation.O
     SideMenu sideMenu;
     private int currentStackIndex = 0;
     private LightBox lightBox;
+    private DisplayMetrics DM;
 
     public BottomTabsLayout(AppCompatActivity activity, ActivityParams params) {
         super(activity);
@@ -71,6 +76,8 @@ public class BottomTabsLayout extends BaseLayout implements AHBottomNavigation.O
         leftSideMenuParams = params.leftSideMenuParams;
         rightSideMenuParams = params.rightSideMenuParams;
         screenStacks = new ScreenStack[params.tabParams.size()];
+        Resources r = getResources();
+        DM = r.getDisplayMetrics();
         createLayout();
     }
 
@@ -129,21 +136,42 @@ public class BottomTabsLayout extends BaseLayout implements AHBottomNavigation.O
         bottomTabs.addTabs(params.tabParams, this);
     }
 
+    private int getRealPixelValue(int value) {
+        return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) value, DM);
+    }
+
     private boolean addOverlay() {
         if (params.overlayParams == null) {
             return false;
         }
+
+        int real_width = getRealPixelValue(params.overlayParams.width);
+        int real_height = getRealPixelValue(params.overlayParams.height);
+        int real_top = getRealPixelValue(params.overlayParams.top);
+        int real_left = getRealPixelValue(params.overlayParams.left);
+
         ContentView overlayView = new ContentView(getContext(), params.overlayParams.screenId, params.overlayParams.navigationParams);
-        LayoutParams lp2 = new LayoutParams(params.overlayParams.width, params.overlayParams.height);
-        overlayView.setX(params.overlayParams.left);
-        overlayView.setY(params.overlayParams.top);
+
+        LayoutParams lp2 = new LayoutParams(real_width, real_height);
+        overlayView.setX(real_left);
+        overlayView.setY(real_top);
         getScreenStackParent().addView(overlayView, lp2);
+        overlayView.bringToFront();
+        ViewCompat.setZ(overlayView, 99999); // 28 and above to put it over the bottom tab bar view
+        overlayView.invalidate();
+        this.invalidate();
 
         return true;
     }
 
     private void addBottomTabs() {
-        LayoutParams lp = new LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+        LayoutParams lp;
+        if(params.tabBarHeightParams == -1 || params.tabBarHeightParams < 0) {
+            lp = new LayoutParams(MATCH_PARENT, WRAP_CONTENT); // default behavior : let tab bar height be WRAP_CONTENT
+        } else {
+            lp = new LayoutParams(MATCH_PARENT, getRealPixelValue(params.tabBarHeightParams)); // set custom user defined tab bar height
+        }
+
         lp.addRule(ALIGN_PARENT_BOTTOM);
         getScreenStackParent().addView(bottomTabs, lp);
     }

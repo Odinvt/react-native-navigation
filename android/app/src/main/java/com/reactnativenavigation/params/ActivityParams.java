@@ -14,4 +14,5 @@ public class ActivityParams {
     public SideMenuParams rightSideMenuParams;
     public OverlayParams overlayParams;
     public boolean animateShow;
+    public Integer tabBarHeightParams;
 }

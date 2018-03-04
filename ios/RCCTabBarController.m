@@ -15,7 +15,9 @@
 @end
 
 @implementation RCCTabBarController
-
+{
+  int tabBarHeight;
+}
 
 -(UIInterfaceOrientationMask)supportedInterfaceOrientations {
   return [self supportedControllerOrientations];
@@ -72,11 +74,13 @@
 }
 
 - (void)viewWillLayoutSubviews {
-  int height = 75;
+  int height = tabBarHeight == -1 ? 75 : tabBarHeight; // was 75
+  
+  log(height);
   
   CGSize screenSize = [[UIScreen mainScreen] bounds].size;
   if (screenSize.height == 812) {
-    height = 85;
+    height = tabBarHeight == -1 ? 85 : tabBarHeight; // was 85
   }
   
   CGRect tabFrame = self.tabBar.frame; //self.TabBar is IBOutlet of your TabBar
@@ -100,6 +104,14 @@
   UIColor *selectedLabelColor = nil;
   NSDictionary *tabsStyle = props[@"style"];
   NSDictionary *overlayConfig = props[@"overlay"];
+
+  if(props[@"tabBarHeight"] != nil) {
+    tabBarHeight = (int) props[@"tabBarHeight"];
+    NSNumber *num = [props objectForKey:@"tabBarHeight"];
+    tabBarHeight = [num intValue];
+  } else {
+    tabBarHeight = -1;
+  }
   
   if (tabsStyle)
   {

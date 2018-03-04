@@ -20,6 +20,12 @@ function startTabBasedApp(params) {
     return;
   }
 
+  if(params.tabBarHeight !== 0 && !params.tabBarHeight) {
+    params.tabBarHeight = -1;
+  }
+
+  console.log("TABBARHEIGHT : " + params.tabBarHeight)
+
   const controllerID = _.uniqueId('controllerID');
   params.tabs.map(function(tab, index) {
     const navigatorID = controllerID + '_nav' + index;
@@ -88,6 +94,7 @@ function startTabBasedApp(params) {
           style={params.tabsStyle}
           appStyle={params.appStyle}
           overlay={params.overlay}
+          tabBarHeight={params.tabBarHeight}
           initialTabIndex={params.initialTabIndex}>
           {
             params.tabs.map(function(tab, index) {
